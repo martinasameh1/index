@@ -1,0 +1,1129 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مدرسة الشمامسة</title>
+    <style>
+        /* إعدادات عامة */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #000;
+            color: #f5f5f5;
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(192, 139, 6, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(192, 139, 6, 0.15) 0%, transparent 40%);
+            z-index: -1;
+            pointer-events: none;
+            animation: backgroundPulse 8s ease-in-out infinite;
+        }
+        
+        /* شريط التنقل */
+        nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(0, 0, 0, 0.98);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            height: 90px;
+            border-bottom: 4px solid rgb(192, 139, 6);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 0 30px;
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.9);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        nav.scrolled {
+            height: 75px;
+            background: rgba(10, 10, 10, 0.98);
+            box-shadow: 0 10px 50px rgba(192, 139, 6, 0.3);
+        }
+        
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            transition: all 0.4s ease;
+        }
+        
+        nav img {
+            height: 65px;
+            width: auto;
+            border-radius: 10px;
+            border: 3px solid rgba(192, 139, 6, 0.8);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            filter: drop-shadow(0 4px 8px rgba(192, 139, 6, 0.4));
+        }
+        
+        nav img:hover {
+            transform: rotate(5deg) scale(1.15);
+            border-color: rgb(230, 170, 20);
+            box-shadow: 0 0 25px rgba(230, 170, 20, 0.6);
+        }
+        
+        .nav-brand span {
+            color: #ffffff;
+            font-size: 32px;
+            font-weight: 700;
+            text-shadow: 0 0 15px rgba(192, 139, 6, 0.7);
+            letter-spacing: 1px;
+            background: linear-gradient(45deg, #ffffff, rgb(192, 139, 6));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            transition: all 0.4s ease;
+        }
+        
+        .nav-brand:hover span {
+            background: linear-gradient(45deg, rgb(192, 139, 6), rgb(230, 170, 20));
+            -webkit-background-clip: text;
+            background-clip: text;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 25px;
+        }
+        
+        nav a {
+            color: #f5f5f5;
+            font-size: 22px;
+            text-decoration: none;
+            padding: 12px 24px;
+            border-radius: 35px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            font-weight: 600;
+        }
+        
+        nav a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(192, 139, 6, 0.2), rgba(230, 170, 20, 0.1));
+            transform: translateX(-100%) rotate(45deg);
+            transition: transform 0.6s ease;
+            border-radius: 35px;
+        }
+        
+        nav a:hover::before {
+            transform: translateX(100%) rotate(45deg);
+        }
+        
+        nav a:hover {
+            color: rgb(230, 170, 20);
+            transform: translateY(-5px) scale(1.05);
+            text-shadow: 0 0 15px rgba(230, 170, 20, 0.7);
+            box-shadow: 0 10px 30px rgba(192, 139, 6, 0.4);
+        }
+        
+        .nav-active {
+            background: linear-gradient(45deg, rgba(192, 139, 6, 0.3), rgba(230, 170, 20, 0.2));
+            color: rgb(230, 170, 20) !important;
+            box-shadow: 0 8px 30px rgba(192, 139, 6, 0.5) !important;
+        }
+        /* زر القائمة المتنقلة - مخفي على الشاشات الكبيرة */
+.menu-toggle {
+    display: none; /* مخفي على الشاشات الكبيرة */
+    width: 40px;
+    height: 40px;
+    background: rgba(192, 139, 6, 0.2);
+    border: 2px solid rgb(192, 139, 6);
+    border-radius: 10px;
+    position: relative;
+    cursor: pointer;
+    order: 3;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+    margin-right: 5px;
+}
+
+.menu-toggle span {
+    position: absolute;
+    height: 3px;
+    width: 60%;
+    background: rgb(230, 170, 20);
+    border-radius: 2px;
+    left: 50%;
+    transform: translateX(-50%);
+    transition: all 0.3s ease;
+}
+
+.menu-toggle span:nth-child(1) {
+    top: 10px;
+}
+
+.menu-toggle span:nth-child(2) {
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.menu-toggle span:nth-child(3) {
+    bottom: 10px;
+}
+
+.menu-toggle.active span:nth-child(1) {
+    top: 50%;
+    transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.menu-toggle.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.menu-toggle.active span:nth-child(3) {
+    bottom: 50%;
+    transform: translate(-50%, 50%) rotate(-45deg);
+}
+        /* المحتوى الرئيسي */
+        .main-content {
+            padding-top: 120px;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding-left: 30px;
+            padding-right: 30px;
+        }
+        
+        /* القسم البطولي */
+        .hero-container {
+            width: 100%;
+            height: auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(0, 0, 0, 0.85);
+            border: 5px solid transparent;
+            border-radius: 25px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+            margin-bottom: 80px;
+            padding: 50px;
+            transition: all 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            overflow: hidden;
+            position: relative;
+            animation: borderGlow 4s ease-in-out infinite;
+        }
+        
+        @keyframes borderGlow {
+            0%, 100% {
+                border-color: rgba(192, 139, 6, 0.5);
+                box-shadow: 0 20px 60px rgba(192, 139, 6, 0.3);
+            }
+            50% {
+                border-color: rgba(230, 170, 20, 0.8);
+                box-shadow: 0 25px 80px rgba(230, 170, 20, 0.5);
+            }
+        }
+        
+        .hero-container:hover {
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: 0 30px 80px rgba(192, 139, 6, 0.6);
+        }
+        
+        .hero-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent 30%, rgba(192, 139, 6, 0.05) 50%, transparent 70%);
+            transform: translateX(-100%);
+            transition: transform 0.8s ease;
+        }
+        
+        .hero-container:hover::before {
+            transform: translateX(100%);
+        }
+        
+        .hero-container img {
+            width: 30%;
+            height: auto;
+            max-height: 450px;
+            object-fit: contain;
+            border-radius: 15px;
+            margin-left: 50px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.9);
+            transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            filter: brightness(0.9);
+        }
+        
+        .hero-container:hover img {
+            transform: scale(1.1) rotate(3deg);
+            box-shadow: 0 20px 50px rgba(192, 139, 6, 0.5);
+            filter: brightness(1.1);
+        }
+        
+        .hero-text {
+            color: #ffffff;
+            text-align: center;
+            font-size: 58px;
+            font-weight: 800;
+            line-height: 1.4;
+            text-shadow: 0 6px 12px rgba(0, 0, 0, 0.8);
+            transition: all 0.5s ease;
+        }
+        
+        .hero-container:hover .hero-text {
+            text-shadow: 0 0 20px rgba(192, 139, 6, 0.7);
+        }
+        
+        .hero-text span {
+            display: block;
+            color: rgb(192, 139, 6);
+            font-size: 46px;
+            margin-top: 20px;
+            font-weight: 700;
+            transition: all 0.5s ease;
+        }
+        
+        .hero-container:hover .hero-text span {
+            color: rgb(230, 170, 20);
+            transform: scale(1.05);
+        }
+        
+        /* قسم الصلاة */
+        .prayer-section {
+            margin-top: 50px;
+            padding-bottom: 80px;
+            animation: fadeInUp 1.2s ease-out;
+        }
+        
+        .section-title {
+            color: #ffffff;
+            border: 5px solid rgb(192, 139, 6);
+            border-radius: 25px;
+            width: 100%;
+            max-width: 950px;
+            margin: 0 auto 60px;
+            font-size: 56px;
+            text-align: center;
+            padding: 30px;
+            background: rgba(0, 0, 0, 0.9);
+            box-shadow: 0 15px 50px rgba(192, 139, 6, 0.4);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .section-title:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 60px rgba(192, 139, 6, 0.6);
+        }
+        
+        .section-title::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, transparent, rgb(192, 139, 6), rgb(230, 170, 20), transparent);
+            animation: shimmer 4s infinite linear;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        @keyframes backgroundPulse {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(60px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* بطاقات النصوص */
+        .psalm-title {
+            color: #fff;
+            background: linear-gradient(90deg, rgba(192, 139, 6, 0.3), rgba(230, 170, 20, 0.2));
+            padding: 20px 30px;
+            border-right: 6px solid rgb(192, 139, 6);
+            border-radius: 0 15px 15px 0;
+            margin-bottom: 30px;
+            font-size: 36px;
+            font-weight: 700;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .psalm-title:hover {
+            transform: translateX(15px) scale(1.03);
+            box-shadow: 0 10px 30px rgba(192, 139, 6, 0.4);
+        }
+        
+        .psalm-title::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+        }
+        
+        .psalm-title:hover::before {
+            transform: translateX(100%);
+        }
+        
+        .prayer-card {
+            width: 100%;
+            height: auto;
+            display: flex;
+            align-items: center;
+            border: 4px solid rgba(192, 139, 6, 0.5);
+            background: rgba(0, 0, 0, 0.9);
+            margin-bottom: 50px;
+            border-radius: 25px;
+            padding: 50px;
+            transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.7);
+            position: relative;
+            overflow: hidden;
+            animation: cardFloat 6s ease-in-out infinite;
+            animation-play-state: paused;
+        }
+        
+        @keyframes cardFloat {
+            0%, 100% {
+                transform: translateY(0);
+                box-shadow: 0 15px 40px rgba(0, 0, 0, 0.7);
+            }
+            50% {
+                transform: translateY(-15px);
+                box-shadow: 0 25px 60px rgba(192, 139, 6, 0.4);
+            }
+        }
+        
+        .prayer-card:hover {
+            animation-play-state: running;
+            border-color: rgb(230, 170, 20);
+            transform: translateY(-20px) scale(1.02);
+            box-shadow: 0 30px 70px rgba(192, 139, 6, 0.5);
+        }
+        
+        .prayer-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, transparent 40%, rgba(192, 139, 6, 0.05) 50%, transparent 60%);
+            transform: translateX(-100%) rotate(45deg);
+            transition: transform 1s ease;
+        }
+        
+        .prayer-card:hover::before {
+            transform: translateX(100%) rotate(45deg);
+        }
+        
+        .prayer-text {
+            color: #f5f5f5;
+            font-size: 32px;
+            line-height: 1.9;
+            text-align: justify;
+            padding: 0 25px;
+            font-weight: 600;
+            transition: all 0.4s ease;
+        }
+        
+        .prayer-card:hover .prayer-text {
+            color: #ffffff;
+            text-shadow: 0 0 10px rgba(192, 139, 6, 0.3);
+        }
+        
+        .prayer-text p {
+            margin-bottom: 30px;
+            transition: transform 0.4s ease;
+        }
+        
+        .prayer-card:hover .prayer-text p {
+            transform: translateX(5px);
+        }
+        
+        .prayer-text p:last-child {
+            margin-bottom: 0;
+        }
+        
+        /* التأكيد على النصوص الهامة */
+        .highlight {
+            color: rgb(230, 170, 20);
+            font-weight: 800;
+            text-shadow: 0 0 10px rgba(230, 170, 20, 0.5);
+            position: relative;
+            padding: 0 5px;
+            transition: all 0.4s ease;
+        }
+        
+        .highlight::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 100%;
+            height: 3px;
+            background: rgb(230, 170, 20);
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.4s ease;
+        }
+        
+        .prayer-card:hover .highlight::before {
+            transform: scaleX(1);
+        }
+        
+        .prayer-card:hover .highlight {
+            transform: scale(1.05);
+            color: rgb(255, 200, 50);
+        }
+        
+        /* تأثيرات للخط العربي */
+        .arabic-text {
+            font-family: 'Traditional Arabic', 'Arial', sans-serif;
+        }
+        
+        /* تذييل الصفحة */
+        footer {
+            background: rgba(0, 0, 0, 0.98);
+            border-top: 5px solid rgb(192, 139, 6);
+            padding: 40px 0;
+            text-align: center;
+            margin-top: 60px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent 30%, rgba(192, 139, 6, 0.05) 50%, transparent 70%);
+            transform: translateX(-100%);
+            animation: footerShimmer 8s infinite linear;
+        }
+        
+        @keyframes footerShimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .footer-text {
+            color: #f5f5f5;
+            font-size: 22px;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* شريط التمرير المخصص */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.9);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, rgb(192, 139, 6), rgb(230, 170, 20));
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, rgb(230, 170, 20), rgb(255, 200, 50));
+            box-shadow: 0 0 10px rgba(192, 139, 6, 0.5);
+        }
+        
+        /* التكيف مع الشاشات الصغيرة */
+        @media (max-width: 1200px) {
+            .hero-text {
+                font-size: 48px;
+            }
+            
+            .hero-text span {
+                font-size: 38px;
+            }
+            
+            .section-title {
+                font-size: 48px;
+            }
+            
+            .prayer-text {
+                font-size: 28px;
+            }
+            
+            .psalm-title {
+                font-size: 32px;
+            }
+        }
+        
+        @media (max-width: 992px) {
+            nav {
+                height: 80px;
+                padding: 0 20px;
+            }
+            
+            nav img {
+                height: 55px;
+            }
+            
+            .nav-brand span {
+                font-size: 28px;
+            }
+            
+            nav a {
+                font-size: 20px;
+                padding: 10px 20px;
+            }
+            
+            .hero-container {
+                flex-direction: column;
+                padding: 40px;
+            }
+            
+            .hero-container img {
+                width: 60%;
+                margin-left: 0;
+                margin-bottom: 40px;
+            }
+            
+            .hero-text {
+                font-size: 42px;
+            }
+            
+            .hero-text span {
+                font-size: 34px;
+            }
+            
+            .section-title {
+                font-size: 42px;
+                padding: 25px;
+            }
+            
+            .prayer-text {
+                font-size: 26px;
+            }
+            
+            .psalm-title {
+                font-size: 28px;
+                padding: 15px 25px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .nav-links {
+                gap: 15px;
+            }
+            
+            nav a {
+                font-size: 18px;
+                padding: 8px 18px;
+            }
+            
+            .hero-text {
+                font-size: 36px;
+            }
+            
+            .hero-text span {
+                font-size: 30px;
+            }
+            
+            .section-title {
+                font-size: 36px;
+                padding: 20px;
+            }
+            
+            .prayer-card {
+                padding: 35px;
+            }
+            
+            .prayer-text {
+                font-size: 24px;
+                padding: 0 15px;
+            }
+            
+            .psalm-title {
+                font-size: 26px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            nav {
+                flex-direction: column;
+                height: auto;
+                padding: 20px;
+                gap: 20px;
+            }
+            
+            .nav-brand {
+                justify-content: center;
+                width: 100%;
+            }
+            
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .main-content {
+                padding-top: 160px;
+                padding-left: 15px;
+                padding-right: 15px;
+            }
+            
+            .hero-text {
+                font-size: 32px;
+            }
+            
+            .hero-text span {
+                font-size: 26px;
+            }
+            
+            .section-title {
+                font-size: 32px;
+                padding: 18px;
+            }
+            
+            .prayer-card {
+                padding: 25px;
+            }
+            
+            .prayer-text {
+                font-size: 22px;
+            }
+            
+            .psalm-title {
+                font-size: 24px;
+                padding: 12px 20px;
+            }
+        }
+        
+        /* تأثيرات الظهور عند التمرير */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+      /* تحديثات لشريط التنقل للجوال */
+@media (max-width: 768px) {
+    nav {
+        flex-direction: row;
+        height: 80px;
+        padding: 10px 20px;
+        gap: 10px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        align-items: center;
+    }
+    
+    nav.scrolled {
+        height: 70px;
+        padding: 8px 20px;
+    }
+    
+    .nav-brand {
+        width: auto;
+        justify-content: flex-start;
+        padding: 0;
+        order: 1;
+        flex: 1;
+    }
+    
+    nav img {
+        height: 50px;
+        order: 1;
+        margin-left: 0;
+    }
+    
+    .nav-brand span {
+        font-size: 22px;
+        order: 2;
+        text-align: right;
+        flex: 1;
+        padding-right: 10px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    
+    .menu-toggle {
+        display: block;
+        width: 45px;
+        height: 45px;
+        background: rgba(192, 139, 6, 0.2);
+        border: 2px solid rgb(192, 139, 6);
+        border-radius: 10px;
+        position: relative;
+        cursor: pointer;
+        order: 3;
+        transition: all 0.3s ease;
+        flex-shrink: 0;
+        margin-right: 5px;
+    }
+    
+    /* إخفاء الروابط العادية */
+    .nav-links {
+        display: none;
+        position: absolute;
+        top: 80px;
+        right: 0;
+        width: 100%;
+        background: rgba(10, 10, 10, 0.98);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        padding: 20px;
+        border-radius: 0 0 15px 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+        border-top: 2px solid rgba(192, 139, 6, 0.3);
+        z-index: 999;
+    }
+    
+    .nav-links.active {
+        display: flex;
+        flex-direction: column;
+        animation: slideDown 0.3s ease;
+    }
+    
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .nav-links a {
+        width: 100%;
+        text-align: center;
+        padding: 15px;
+        font-size: 18px;
+        border-radius: 25px;
+        margin: 5px 0;
+        background: rgba(192, 139, 6, 0.1);
+        transition: all 0.3s ease;
+    }
+    
+    .nav-links a:hover {
+        background: rgba(192, 139, 6, 0.3);
+        transform: translateY(-3px);
+    }
+    
+    .main-content {
+        padding-top: 100px;
+    }
+}
+
+@media (max-width: 480px) {
+    nav {
+        padding: 8px 15px;
+        height: 70px;
+    }
+    
+    nav.scrolled {
+        height: 65px;
+    }
+    
+    nav img {
+        height: 40px;
+    }
+    
+    .nav-brand span {
+        font-size: 18px;
+        padding-right: 8px;
+    }
+    
+    .menu-toggle {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .menu-toggle span {
+        height: 2.5px;
+    }
+    
+    .nav-links {
+        top: 70px;
+    }
+    
+    .main-content {
+        padding-top: 90px;
+    }
+}
+
+@media (max-width: 360px) {
+    .nav-brand span {
+        font-size: 16px;
+    }
+    
+    nav img {
+        height: 35px;
+    }
+    
+    .menu-toggle {
+        width: 35px;
+        height: 35px;
+    }
+}
+    </style>
+</head>
+<body>
+    <nav id="navbar">
+        <div class="nav-brand">
+            <img src="pic/WhatsApp Image 2025-11-14 at 22.07.54_3df7c7ed.jpg" alt="شعار مدرسة الشمامسة">
+            <span>مدرسة الشمامسة</span>
+        </div>
+        <div class="nav-links">
+            <a href="home.html">الرئيسية</a>
+            <a href="الحان.html">الحان</a>
+            <a href="طقس.html">طقس</a>
+            <a href="قبطى.html">قبطى</a>
+        </div>
+        <div class="menu-toggle" id="menuToggle">
+    <span></span>
+    <span></span>
+    <span></span>
+</div>
+    </nav>
+    
+    <div class="main-content">
+        <div class="hero-container">
+            <img src="pic/WhatsApp Image 2025-11-14 at 22.07.54_3df7c7ed.jpg" alt="مدرسة شمامسة">
+            <div class="hero-text">
+                مدرسة هوس ايروف
+                <span>مرحلة 5 و 6</span>
+            </div>
+        </div>
+        
+        <div class="prayer-section">
+            <h1 class="section-title fade-in">الصلاة</h1>
+            
+            <div class="psalm-title fade-in">المزمور المائة – اهتفى للرب يا كل الارض</div>
+            <div class="prayer-card fade-in">
+                <div class="prayer-text arabic-text">
+                    اهتفي للرب يا كل الأرض.<br>
+                    اعبدوا الرب بفرح. ادخلوا إلى حضرته بترنم.<br>
+                    اعلموا أن الرب هو الله. هو صنعنا، وله نحن، شعبه وغنم مرعاه.<br>
+                    ادخلوا أبوابه بحمد، دياره بالتسبيح. احمدوه، باركوا اسمه.<br>
+                    لأن الرب صالح، إلى الأبد رحمته، وإلى دور فدور (من جيل الى جيل) أمانته. هلليويا
+                </div>
+            </div>
+            
+            <div class="psalm-title fade-in">المزمور 114 – احببت ان يسمع الرب صوت تضرعي</div>
+            <div class="prayer-card fade-in">
+                <div class="prayer-text arabic-text">
+                    أحببتُ أن يسمع الرب صوت تضرعي.<br>
+                    لأنه أمال أذنه إليّ فأدعوه كل أيامي.<br>
+                    لأن أوجاع الموت اكتنفتني وشدائد الجحيم أصابتني.<br>
+                    ضيقا وحزنا وجدت، وباسم الرب دعوت.<br>
+                    يا رب نج نفسي. الرب رحيم وصدّيق وإلهنا يرحم.<br>
+                    الذي يحفظ الأطفالَ هو الرب. اتضعتُ فخلصني.<br>
+                    ارجعي يا نفسي إلى موضع راحتكِ، لأن الرب قد أحسن إلى،<br>
+                    وأنقذ نفسي من الموت وعيني من الدموع ورجلي من الزلل،<br>
+                    أرضي الربَّ أمامه في كورة الأحياء. هلليلويا.
+                </div>
+            </div>
+            
+            <div class="psalm-title fade-in">تسبحة الملائكة</div>
+            <div class="prayer-card fade-in">
+                <div class="prayer-text arabic-text">
+                    ارحمنا يا الله الآب ضابط الكل. أيها الثالوث القدوس ارحمنا. أيها الرب إله القوات كن معنا، لأنه ليس لنا معين في شدائدنا وضيقاتنا سواك.<br>
+                    حل واغفر واصفح لنا يا الله عن سيئاتنا، التي صنعناها بإرادتنا والتي صنعناها بغير إرادتنا، التي فعلناها بمعرفة والتي فعلناها بغير معرفة، الخفية والظاهرة. يا رب اغفرها لنا، من أجل اسمك القدوس الذي دعي علينا. كرحمتك يا رب وليس كخطايانا.<br>
+                    واجعلنا مستحقين أن نقول بشكر: <span class="highlight">أبانا الذي في السموات..</span>
+                </div>
+            </div>
+            
+            <h1 class="section-title fade-in">مديح الثالوث يليق بالثالوث القدوس</h1>
+            <div class="prayer-card fade-in">
+                <div class="prayer-text arabic-text">
+                    + السجود يليق بالثالوث القدوس: الآب والابن والروح القدس: نسجد ونسبح ونقدس: لإله واحد خالق الأنفس<br><br>
+                    + له المجد الدائم والاكرام: صاحب الهيبة والملكوت: قديم أزلي قبل الايام: دائم باقي حي لا يموت<br><br>
+                    + قدوس الله قدوس القوي: قدوس الحي الذي لا يموت: رب العرش الملك العلوي: نكرز ونبشر بالثالوث<br><br>
+                    + مبارك الآب ضابط الكل: مبارك الابن يسوع المسيح: مبارك روح قدسه الذي لا يزال: يجب له السجود مع التسابيح<br><br>
+                    + صاحب قدرة وسلطان عظيم: حاكم عالم جيد وكريم: اله واحد في ثلاثة أقانيم: يعجز عن وصفه كل فهيم<br><br>
+                    + جوهر واحد طبع واحد: وذات واحد في اللاهوت فريد: الثلاثة واحد في الجوهر: من غير تفريد ولا تقسيم<br><br>
+                    + جوهر واحد في ثلاثة اقانيم: من غير تفريد ولا تقسيم: سلطان واحد في ملكه مقيم: مالىء سموات وكل الاقانيم<br><br>
+                    + سر يفوق البشرية: بحسب الجوهر إله واحد: وأما حسب الأقنومية: هم ثلاثة إله واحد<br><br>
+                    + الابن مولود من الأزلية: ليس لتقديم الإرادة ولد من الآب: لكن ولادة طبيعية: والروح القدس منبثق من الآب<br><br>
+                    + كولادة شعاع الشمس وحرارتها: والقرص الباعث للاثنين: وهذه الولادة طبيعية: لا منقطعين ولا منفصلين<br><br>
+                    + الثلاثة أقانيم متساوية: في الجوهر واللاهوتية: وفي قدم الأزلية: ودوام الحياة الأبدية<br><br>
+                    + شاف دانيال كرسي أعيان: والجالس عليه عتيق الأيام: دنا منه ابن الانسان: واعطاه الكرامة والسلطان<br><br>
+                    + نظر الكرسي شبيه البرق: والجالس عليه شبيه النار: شعر رأسه أبيض كالثلج: حاملينه أربعة كائنات من نار<br><br>
+                    + رأى الأربعة من غير جسد: واحد في شبه انسان وواحد في شبه ثور: والكائن الثالث شبه اسد: والكائن الرابع شبيه النسور<br><br>
+                    + أربعة وجوه للواحد منهم: وستة أجنحة وكله عيون: باثنين يغطون أرجلهم: يسترون وجوههم بإتنين ويطيرون بإثنين<br><br>
+                    + اربعة وعشرون قسيسا بكراسيهم: وأكاليل ذهب تشعل كالنار: ومجامر ذهب في أيديهم: ببخور صاعد ليلا ونهار<br><br>
+                    + يحوط بالكرسي الوف الوف: ورؤساء ملائكة ربوات ربوات: كراسي وسلاطين صفوف صفوف: ترتل له بأعلى الأصوات<br><br>
+                    + وعند صياح الكائنات والقسوس: يصيحون جميعا بأعلى صوت: صارخين قائلين قدوس قدوس: قدوس الحي رب الصباؤوت<br><br>
+                    + السماء والأرض مملوءة: من مجدك الفائق ومديحك: لك المجد لك القوة: وجميع البرايا لتسابيحك<br><br>
+                    + الليلويا الليلويا: لك العظمة والجبروت: لك المجد لك القوة: ولك الهيبة ولك الملكوت
+                </div>
+            </div>
+            
+            <div class="psalm-title fade-in">صلاة قطع الساعة الثالثة</div>
+            <div class="prayer-card fade-in">
+                <div class="prayer-text arabic-text">
+                    أيها الملك السمائي المُعَزّي، روح الحق، الحاضر في كل مكان والمالئ الكل، كنز الصالحات، ومعطى الحياة، هلم تفضل وحل فينا، وطهرنا من كل دنس أيها الصالح، وخلص نفوسنا. (ذوكصابتري...).<br><br>
+                    كما كنت مع تلاميذك أيها المخلص وأعطيتهم السلام، هلم أيضا كن معنا وامنحنا سلامك وخلصنا ونج نفوسنا (كي نين..).<br><br>
+                    إذا ما وقفنا في هيكلك المقدس نحسب كالقيام في السماء. يا والدة الإله، أنتِ هي باب السماء، افتحي لنا باب الرحمة.<br><br>
+                    اجعلنا مستحقين يارب نقول لك بكل شكر: <span class="highlight">ابانا الذي فى السموات</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="footer-text">©2026 مدرسة الشمامسة - جميع الحقوق محفوظة</div>
+    </footer>
+
+    <script>
+        // تأثير التمرير على شريط التنقل
+        window.addEventListener('scroll', function() {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+            
+            // تأثير الظهور عند التمرير
+            const fadeElements = document.querySelectorAll('.fade-in');
+            fadeElements.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                const elementVisible = 150;
+                
+                if (elementTop < window.innerHeight - elementVisible) {
+                    element.classList.add('visible');
+                }
+            });
+        });
+        
+        // تأثيرات إضافية عند التحميل
+        document.addEventListener('DOMContentLoaded', function() {
+            // بدء تأثيرات الظهور
+            const fadeElements = document.querySelectorAll('.fade-in');
+            fadeElements.forEach((element, index) => {
+                setTimeout(() => {
+                    if (element.getBoundingClientRect().top < window.innerHeight - 100) {
+                        element.classList.add('visible');
+                    }
+                }, 100 * index);
+            });
+            
+            // تأثيرات تفاعلية للبطاقات
+            const prayerCards = document.querySelectorAll('.prayer-card');
+            prayerCards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.animationPlayState = 'running';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.animationPlayState = 'paused';
+                });
+            });
+            
+            // تأثير عند فتح الصفحة
+            setTimeout(() => {
+                document.body.style.opacity = '0';
+                document.body.style.transition = 'opacity 0.5s ease';
+                
+                setTimeout(() => {
+                    document.body.style.opacity = '1';
+                }, 50);
+            }, 100);
+        });
+        
+        // تأثيرات للماوس على الروابط
+        const navLinks = document.querySelectorAll('nav a');
+        navLinks.forEach(link => {
+            link.addEventListener('mouseenter', function(e) {
+                const x = e.pageX - this.getBoundingClientRect().left;
+                const y = e.pageY - this.getBoundingClientRect().top;
+                
+                this.style.transformOrigin = `${x}px ${y}px`;
+            });
+        });
+         const menuToggle = document.getElementById('menuToggle');
+    const navLinksMobile = document.querySelector('.nav-links');
+    
+    if (menuToggle) {
+        menuToggle.addEventListener('click', function() {
+            this.classList.toggle('active');
+            navLinksMobile.classList.toggle('active');
+        });
+        
+        // إغلاق القائمة عند النقر على رابط
+        const links = document.querySelectorAll('.nav-links a');
+        links.forEach(link => {
+            link.addEventListener('click', () => {
+                menuToggle.classList.remove('active');
+                navLinksMobile.classList.remove('active');
+            });
+        });
+        
+        // إغلاق القائمة عند التمرير
+        window.addEventListener('scroll', () => {
+            if (menuToggle.classList.contains('active')) {
+                menuToggle.classList.remove('active');
+                navLinksMobile.classList.remove('active');
+            }
+        });
+    }
+    </script>
+</body>
+</html>

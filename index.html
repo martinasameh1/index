@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مدرسة شمامسة - اختر المرحلة</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* إعدادات عامة */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #000;
+            color: #f5f5f5;
+            line-height: 1.6;
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(192, 139, 6, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 80% 70%, rgba(192, 139, 6, 0.1) 0%, transparent 20%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        /* تصميم الحاوية الرئيسية */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            justify-content: center;
+        }
+        
+        /* تصميم العنوان الرئيسي */
+        .main-title {
+            text-align: center;
+            margin-bottom: 60px;
+            width: 100%;
+            position: relative;
+        }
+        
+        .main-title h1 {
+            font-size: 3.5rem;
+            color: #ffffff;
+            margin-bottom: 15px;
+            text-shadow: 0 0 15px rgba(192, 139, 6, 0.7);
+            letter-spacing: 1px;
+        }
+        
+        .main-title p {
+            font-size: 1.2rem;
+            color: #cccccc;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
+        
+        .main-title::after {
+            content: '';
+            position: absolute;
+            bottom: -20px;
+            right: 50%;
+            transform: translateX(50%);
+            width: 150px;
+            height: 4px;
+            background: linear-gradient(to right, transparent, rgb(192, 139, 6), transparent);
+            border-radius: 2px;
+        }
+        
+        /* تصميم بطاقات المراحل */
+        .stages-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 40px;
+            width: 100%;
+            margin-top: 20px;
+        }
+        
+        .stage-card {
+            flex: 1;
+            min-width: 300px;
+            max-width: 350px;
+            height: 300px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        .stage-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: all 0.5s ease;
+            border-radius: 20px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
+            overflow: hidden;
+        }
+        
+        .stage-card-inner {
+            background: rgba(0, 0, 0, 0.85);
+            border: 3px solid rgb(192, 139, 6);
+            box-shadow: 0 10px 25px rgba(192, 139, 6, 0.3);
+        }
+        
+        .stage-card:hover .stage-card-inner {
+            transform: translateY(-15px);
+            border-color: rgb(230, 170, 20);
+            box-shadow: 0 20px 40px rgba(230, 170, 20, 0.4);
+        }
+        
+        /* تصميم محتوى البطاقات */
+        .stage-icon {
+            font-size: 4rem;
+            color: rgb(192, 139, 6);
+            margin-bottom: 20px;
+            transition: all 0.5s;
+        }
+        
+        .stage-card:hover .stage-icon {
+            color: rgb(230, 170, 20);
+            transform: scale(1.1);
+        }
+        
+        .stage-title {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            color: #ffffff;
+            font-weight: 700;
+            transition: all 0.5s;
+        }
+        
+        .stage-card:hover .stage-title {
+            color: rgb(230, 170, 20);
+            text-shadow: 0 0 10px rgba(230, 170, 20, 0.5);
+        }
+        
+        .stage-number {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(192, 139, 6, 0.2);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: rgb(192, 139, 6);
+            border: 2px solid rgb(192, 139, 6);
+            transition: all 0.5s;
+        }
+        
+        .stage-card:hover .stage-number {
+            background: rgba(230, 170, 20, 0.3);
+            color: rgb(230, 170, 20);
+            border-color: rgb(230, 170, 20);
+            transform: scale(1.1);
+        }
+        
+        /* تصميم النجوم */
+        .stars-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            right: 0;
+            pointer-events: none;
+            overflow: hidden;
+            border-radius: 20px;
+        }
+        
+        .star {
+            position: absolute;
+            color: rgb(192, 139, 6);
+            opacity: 0.3;
+            font-size: 1.2rem;
+            transition: all 0.5s;
+        }
+        
+        .stage-card:hover .star {
+            color: rgb(230, 170, 20);
+            opacity: 0.7;
+            transform: scale(1.2);
+        }
+        
+        /* تصميم الروابط */
+        .stage-link {
+            display: inline-block;
+            margin-top: 25px;
+            padding: 12px 30px;
+            background: rgba(192, 139, 6, 0.2);
+            color: rgb(192, 139, 6);
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            border: 2px solid rgb(192, 139, 6);
+            transition: all 0.4s;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .stage-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 0;
+            height: 100%;
+            background: rgb(192, 139, 6);
+            transition: all 0.4s;
+            z-index: -1;
+        }
+        
+        .stage-link:hover::before {
+            width: 100%;
+        }
+        
+        .stage-link:hover {
+            color: #000;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(192, 139, 6, 0.3);
+        }
+        
+        /* تصميم الفوتر */
+        .footer {
+            margin-top: 80px;
+            text-align: center;
+            padding: 20px;
+            width: 100%;
+            color: #aaaaaa;
+            font-size: 0.9rem;
+            border-top: 1px solid rgba(192, 139, 6, 0.2);
+        }
+        
+        .school-name {
+            color: rgb(192, 139, 6);
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-top: 10px;
+        }
+        
+        /* تأثيرات متحركة */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* تطبيق الرسوم المتحركة */
+        .main-title h1 {
+            animation: fadeInUp 1s ease-out;
+        }
+        
+        .main-title p {
+            animation: fadeInUp 1s ease-out 0.3s both;
+        }
+        
+        .stage-card:nth-child(1) {
+            animation: fadeInUp 0.8s ease-out 0.6s both;
+        }
+        
+        .stage-card:nth-child(2) {
+            animation: fadeInUp 0.8s ease-out 0.8s both;
+        }
+        
+        .stage-card:nth-child(3) {
+            animation: fadeInUp 0.8s ease-out 1s both;
+        }
+        
+        /* تصميم متجاوب للأجهزة المختلفة */
+        @media (max-width: 1100px) {
+            .stages-container {
+                gap: 30px;
+            }
+            
+            .stage-card {
+                min-width: 280px;
+            }
+        }
+        
+        @media (max-width: 900px) {
+            .stages-container {
+                gap: 20px;
+            }
+            
+            .stage-card {
+                min-width: 250px;
+                height: 280px;
+            }
+            
+            .stage-title {
+                font-size: 1.9rem;
+            }
+            
+            .main-title h1 {
+                font-size: 2.8rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .stages-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .stage-card {
+                width: 100%;
+                max-width: 400px;
+            }
+            
+            .main-title h1 {
+                font-size: 2.5rem;
+            }
+            
+            .main-title p {
+                font-size: 1.1rem;
+                padding: 0 15px;
+            }
+            
+            .container {
+                padding: 15px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .main-title h1 {
+                font-size: 2rem;
+            }
+            
+            .stage-title {
+                font-size: 1.7rem;
+            }
+            
+            .stage-icon {
+                font-size: 3.5rem;
+            }
+            
+            .stage-card {
+                height: 260px;
+            }
+            
+            .stage-link {
+                padding: 10px 25px;
+                font-size: 1rem;
+            }
+            
+            .stage-number {
+                width: 50px;
+                height: 50px;
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="main-title">
+            <h1>مدرسة هوس ايروف</h1>
+            <p>مرحباً بكم في مدرسة هوس ايروف، يرجى اختيار المرحلة </p>
+        </div>
+        
+        <div class="stages-container">
+            <!-- مرحلة أولى وثانية -->
+            <div class="stage-card">
+                <div class="stage-card-inner">
+                    <div class="stage-number">1-2</div>
+                    <div class="stars-container" id="stars-1"></div>
+                    <i class="stage-icon fas fa-star"></i>
+                    <h2 class="stage-title">مرحلة أولى وثانية</h2>
+                    <a href="home1.html" class="stage-link">الدخول <i class="fas fa-arrow-left"></i></a>
+                </div>
+            </div>
+            
+            <!-- مرحلة ثالثة ورابعة -->
+            <div class="stage-card">
+                <div class="stage-card-inner">
+                    <div class="stage-number">3-4</div>
+                    <div class="stars-container" id="stars-2"></div>
+                    <i class="stage-icon fas fa-star"></i>
+                    <h2 class="stage-title">مرحلة ثالثة ورابعة</h2>
+                    <a href="home2.html" class="stage-link">الدخول <i class="fas fa-arrow-left"></i></a>
+                </div>
+            </div>
+            
+            <!-- مرحلة خامسة وسادسة -->
+            <div class="stage-card">
+                <div class="stage-card-inner">
+                    <div class="stage-number">5-6</div>
+                    <div class="stars-container" id="stars-3"></div>
+                    <i class="stage-icon fas fa-star"></i>
+                    <h2 class="stage-title">مرحلة خامسة وسادسة</h2>
+                    <a href="home.html" class="stage-link">الدخول <i class="fas fa-arrow-left"></i></a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>جميع الحقوق محفوظة © 2026</p>
+            <p class="school-name">مدرسة شمامسة</p>
+        </div>
+    </div>
+    
+    <script>
+        // إنشاء النجوم بشكل عشوائي لكل بطاقة
+        function createStars(containerId, count) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            
+            for (let i = 0; i < count; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.innerHTML = '★';
+                
+                // وضع عشوائي للنجمة
+                star.style.top = `${Math.random() * 100}%`;
+                star.style.right = `${Math.random() * 100}%`;
+                
+                // حجم عشوائي
+                const size = 0.8 + Math.random() * 0.8;
+                star.style.fontSize = `${size}rem`;
+                
+                // تأخير عشوائي للحركة
+                star.style.transitionDelay = `${Math.random() * 0.5}s`;
+                
+                container.appendChild(star);
+            }
+        }
+        
+        // جعل البطاقات قابلة للنقر بالكامل
+        document.addEventListener('DOMContentLoaded', function() {
+            // إنشاء النجوم لكل بطاقة
+            createStars('stars-1', 15);
+            createStars('stars-2', 15);
+            createStars('stars-3', 15);
+            
+            const stageCards = document.querySelectorAll('.stage-card');
+            
+            stageCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    const link = this.querySelector('.stage-link');
+                    if (link && link.getAttribute('href') !== '#') {
+                        window.location.href = link.getAttribute('href');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

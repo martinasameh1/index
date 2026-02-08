@@ -1,0 +1,1483 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مدرسة شمامسة - الحان</title>
+    <style>
+        /* إعدادات عامة */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #000;
+            color: #f5f5f5;
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(192, 139, 6, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(192, 139, 6, 0.15) 0%, transparent 40%);
+            z-index: -1;
+            pointer-events: none;
+            animation: backgroundPulse 8s ease-in-out infinite;
+        }
+        
+        @keyframes backgroundPulse {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+        
+        /* شريط التنقل */
+        nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(0, 0, 0, 0.98);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            height: 90px;
+            border-bottom: 4px solid rgb(192, 139, 6);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 0 30px;
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.9);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        nav.scrolled {
+            height: 75px;
+            background: rgba(10, 10, 10, 0.98);
+            box-shadow: 0 10px 50px rgba(192, 139, 6, 0.3);
+        }
+        
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            transition: all 0.4s ease;
+        }
+        
+        nav img {
+            height: 65px;
+            width: auto;
+            border-radius: 10px;
+            border: 3px solid rgba(192, 139, 6, 0.8);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            filter: drop-shadow(0 4px 8px rgba(192, 139, 6, 0.4));
+        }
+        
+        nav img:hover {
+            transform: rotate(5deg) scale(1.15);
+            border-color: rgb(230, 170, 20);
+            box-shadow: 0 0 25px rgba(230, 170, 20, 0.6);
+        }
+        
+        .nav-brand span {
+            color: #ffffff;
+            font-size: 28px;
+            font-weight: 700;
+            text-shadow: 0 0 15px rgba(192, 139, 6, 0.7);
+            letter-spacing: 1px;
+            background: linear-gradient(45deg, #ffffff, rgb(192, 139, 6));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            transition: all 0.4s ease;
+        }
+        
+        .nav-brand:hover span {
+            background: linear-gradient(45deg, rgb(192, 139, 6), rgb(230, 170, 20));
+            -webkit-background-clip: text;
+            background-clip: text;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 25px;
+        }
+        
+        nav a {
+            color: #f5f5f5;
+            font-size: 20px;
+            text-decoration: none;
+            padding: 12px 24px;
+            border-radius: 35px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            font-weight: 600;
+        }
+        
+        nav a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(192, 139, 6, 0.2), rgba(230, 170, 20, 0.1));
+            transform: translateX(-100%) rotate(45deg);
+            transition: transform 0.6s ease;
+            border-radius: 35px;
+        }
+        
+        nav a:hover::before {
+            transform: translateX(100%) rotate(45deg);
+        }
+        
+        nav a:hover {
+            color: rgb(230, 170, 20);
+            transform: translateY(-5px) scale(1.05);
+            text-shadow: 0 0 15px rgba(230, 170, 20, 0.7);
+            box-shadow: 0 10px 30px rgba(192, 139, 6, 0.4);
+        }
+        
+        .nav-active {
+            background: linear-gradient(45deg, rgba(192, 139, 6, 0.3), rgba(230, 170, 20, 0.2));
+            color: rgb(230, 170, 20) !important;
+            box-shadow: 0 8px 30px rgba(192, 139, 6, 0.5) !important;
+        }
+        
+        /* زر القائمة المتنقلة */
+        .menu-toggle {
+            display: none;
+            width: 40px;
+            height: 40px;
+            background: rgba(192, 139, 6, 0.2);
+            border: 2px solid rgb(192, 139, 6);
+            border-radius: 10px;
+            position: relative;
+            cursor: pointer;
+            order: 3;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+            margin-right: 5px;
+        }
+
+        .menu-toggle span {
+            position: absolute;
+            height: 3px;
+            width: 60%;
+            background: rgb(230, 170, 20);
+            border-radius: 2px;
+            left: 50%;
+            transform: translateX(-50%);
+            transition: all 0.3s ease;
+        }
+
+        .menu-toggle span:nth-child(1) {
+            top: 10px;
+        }
+
+        .menu-toggle span:nth-child(2) {
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .menu-toggle span:nth-child(3) {
+            bottom: 10px;
+        }
+
+        .menu-toggle.active span:nth-child(1) {
+            top: 50%;
+            transform: translate(-50%, -50%) rotate(45deg);
+        }
+
+        .menu-toggle.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .menu-toggle.active span:nth-child(3) {
+            bottom: 50%;
+            transform: translate(-50%, 50%) rotate(-45deg);
+        }
+        
+        /* المحتوى الرئيسي */
+        .main-content {
+            padding-top: 120px;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding-left: 30px;
+            padding-right: 30px;
+        }
+        
+        /* عناوين الألحان */
+        .hymn-title {
+            color: #ffffff;
+            border: 4px solid transparent;
+            border-radius: 25px;
+            width: 90%;
+            max-width: 1000px;
+            margin: 50px auto 0;
+            font-size: 42px;
+            text-align: center;
+            padding: 30px 40px;
+            background: rgba(0, 0, 0, 0.85);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: titleFloat 6s ease-in-out infinite;
+            animation-play-state: paused;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        
+        @keyframes titleFloat {
+            0%, 100% {
+                transform: translateY(0);
+                box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
+            }
+            50% {
+                transform: translateY(-10px);
+                box-shadow: 0 20px 50px rgba(192, 139, 6, 0.4);
+            }
+        }
+        
+        .hymn-title.visible {
+            opacity: 1;
+            transform: translateY(0);
+            animation-play-state: running;
+        }
+        
+        .hymn-title::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent 30%, rgba(192, 139, 6, 0.05) 50%, transparent 70%);
+            transform: translateX(-100%);
+            transition: transform 0.8s ease;
+        }
+        
+        .hymn-title:hover {
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: 0 25px 60px rgba(192, 139, 6, 0.5);
+            background: rgba(0, 0, 0, 0.9);
+            border-color: rgb(192, 139, 6);
+        }
+        
+        .hymn-title:hover::before {
+            transform: translateX(100%);
+        }
+        
+        .hymn-title::after {
+            content: '▼';
+            position: absolute;
+            left: 40px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 32px;
+            color: rgb(192, 139, 6);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .hymn-title.active::after {
+            transform: translateY(-50%) rotate(180deg);
+            color: rgb(230, 170, 20);
+        }
+        
+        .hymn-title.active {
+            animation-play-state: paused;
+            border-color: rgb(230, 170, 20);
+            box-shadow: 0 20px 60px rgba(230, 170, 20, 0.4);
+            background: rgba(0, 0, 0, 0.95);
+        }
+        
+        /* بطاقات الألحان */
+        .hymn-card {
+            width: 95%;
+            height: auto;
+            align-items: center;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            border: 4px solid transparent;
+            background: rgba(0, 0, 0, 0.9);
+            margin: 0 auto;
+            border-radius: 25px;
+            padding: 0;
+            transition: all 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8);
+            opacity: 0;
+            max-height: 0;
+            overflow: hidden;
+            transform: translateY(-20px) scale(0.95);
+        }
+        
+        .hymn-card.active {
+            opacity: 1;
+            max-height: 5000px;
+            transform: translateY(0) scale(1);
+            margin-top: 30px;
+            margin-bottom: 60px;
+            padding: 50px;
+            border-color: rgb(192, 139, 6);
+            animation: cardGlow 4s ease-in-out infinite;
+        }
+        
+        @keyframes cardGlow {
+            0%, 100% {
+                border-color: rgba(192, 139, 6, 0.7);
+                box-shadow: 0 15px 40px rgba(192, 139, 6, 0.3);
+            }
+            50% {
+                border-color: rgba(230, 170, 20, 0.9);
+                box-shadow: 0 20px 50px rgba(230, 170, 20, 0.4);
+            }
+        }
+        
+        .hymn-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 60px rgba(192, 139, 6, 0.5);
+        }
+        
+        /* محتوى الألحان */
+        .hymn-content {
+            color: #f5f5f5;
+            font-size: 36px;
+            line-height: 1.8;
+            text-align: center;
+            width: 100%;
+            font-family: 'Traditional Arabic', 'Arial', sans-serif;
+            padding: 20px;
+            transition: all 0.5s ease;
+        }
+        
+        /* ألوان مختلفة للمراتد */
+        .hymn-response {
+            color: #f5f5f5;
+            font-size: 36px;
+            line-height: 1.8;
+            text-align: center;
+            width: 100%;
+            font-family: 'Traditional Arabic', 'Arial', sans-serif;
+            padding: 20px;
+        }
+        
+        .hymn-response .priest {
+            color: #4da6ff;
+            font-weight: bold;
+            position: relative;
+            display: inline-block;
+            transition: all 0.4s ease;
+        }
+        
+        .hymn-response .priest::after {
+            content: '👨‍⚕️';
+            margin-right: 10px;
+            font-size: 28px;
+            opacity: 0.7;
+        }
+        
+        .hymn-response .people {
+            color: #ffcc66;
+            font-weight: bold;
+            position: relative;
+            display: inline-block;
+            transition: all 0.4s ease;
+        }
+        
+        .hymn-response .people::after {
+            content: '👥';
+            margin-right: 10px;
+            font-size: 28px;
+            opacity: 0.7;
+        }
+        
+        .hymn-response .priest:hover,
+        .hymn-response .people:hover {
+            transform: translateY(-3px);
+            text-shadow: 0 0 10px currentColor;
+        }
+        
+        /* تلوين الأسطر المختلفة */
+        .line {
+            display: block;
+            margin-bottom: 30px;
+            padding: 20px;
+            border-radius: 15px;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            font-weight: bold;
+            background: rgba(192, 139, 6, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .line::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(192, 139, 6, 0.1), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+        }
+        
+        .line:hover::before {
+            transform: translateX(100%);
+        }
+        
+        .line:hover {
+            background: rgba(192, 139, 6, 0.1);
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 10px 25px rgba(192, 139, 6, 0.2);
+        }
+        
+        /* تأكيد النغمات الموسيقية */
+        .music-note {
+            color: rgb(230, 170, 20);
+            font-weight: bold;
+            letter-spacing: 3px;
+            position: relative;
+            padding-left: 40px;
+            transition: all 0.4s ease;
+        }
+        
+        .music-note::before {
+            content: '🎵';
+            position: absolute;
+            right: -40px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 24px;
+            opacity: 0.7;
+        }
+        
+        .music-note:hover {
+            color: rgb(255, 200, 50);
+            letter-spacing: 4px;
+            text-shadow: 0 0 15px rgba(230, 170, 20, 0.5);
+        }
+        
+        /* تنسيق النصوص المتوازية للعربي والقبطي */
+        .hymn-bilingual {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            width: 100%;
+            margin-top: 30px;
+            position: relative;
+            animation: fadeIn 0.8s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .arabic-text, .coptic-text {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            text-align: center;
+        }
+        
+        .arabic-text .line, .coptic-text .line {
+            display: block;
+            margin-bottom: 20px;
+            padding: 25px;
+            border-radius: 15px;
+            background: rgba(192, 139, 6, 0.07);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            font-size: 32px;
+        }
+        
+        .arabic-text .line:hover, .coptic-text .line:hover {
+            background: rgba(192, 139, 6, 0.12);
+            transform: translateY(-8px) scale(1.03);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* خط فاصل بين الأعمدة */
+        .hymn-bilingual::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 3px;
+            background: linear-gradient(to bottom, transparent, rgb(192, 139, 6), rgb(230, 170, 20), transparent);
+        }
+        
+        /* عناوين الأعمدة */
+        .column-title {
+            color: rgb(230, 170, 20);
+            font-size: 28px;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid rgba(192, 139, 6, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .column-title::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            right: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, rgb(192, 139, 6), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+        }
+        
+        .column-title:hover::after {
+            transform: translateX(100%);
+        }
+        
+        /* تأثيرات الظهور عند التمرير */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* شريط التمرير المخصص */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.9);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, rgb(192, 139, 6), rgb(230, 170, 20));
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, rgb(230, 170, 20), rgb(255, 200, 50));
+            box-shadow: 0 0 10px rgba(192, 139, 6, 0.5);
+        }
+        
+        /* تذييل الصفحة */
+        footer {
+            background: rgba(0, 0, 0, 0.98);
+            border-top: 5px solid rgb(192, 139, 6);
+            padding: 40px 0;
+            text-align: center;
+            margin-top: 60px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent 30%, rgba(192, 139, 6, 0.05) 50%, transparent 70%);
+            transform: translateX(-100%);
+            animation: footerShimmer 8s infinite linear;
+        }
+        
+        @keyframes footerShimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .footer-text {
+            color: #f5f5f5;
+            font-size: 22px;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* تحسينات للجوال */
+        @media (max-width: 1200px) {
+            .hymn-title {
+                font-size: 36px;
+                padding: 25px 35px;
+            }
+            
+            .hymn-content, .hymn-response {
+                font-size: 32px;
+            }
+            
+            .arabic-text .line, .coptic-text .line {
+                font-size: 28px;
+            }
+        }
+        
+        @media (max-width: 992px) {
+            nav {
+                height: 80px;
+                padding: 0 20px;
+            }
+            
+            nav img {
+                height: 55px;
+            }
+            
+            .nav-brand span {
+                font-size: 24px;
+            }
+            
+            nav a {
+                font-size: 18px;
+                padding: 10px 20px;
+            }
+            
+            .hymn-title {
+                font-size: 32px;
+                padding: 20px 30px;
+            }
+            
+            .hymn-title::after {
+                left: 25px;
+                font-size: 28px;
+            }
+            
+            .hymn-content, .hymn-response {
+                font-size: 28px;
+            }
+            
+            .hymn-card {
+                padding: 0;
+            }
+            
+            .hymn-card.active {
+                padding: 40px;
+            }
+            
+            /* تعديل النصوص المتوازية للشاشات المتوسطة */
+            .hymn-bilingual {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+            
+            .hymn-bilingual::before {
+                display: none;
+            }
+            
+            .arabic-text::after {
+                content: '';
+                display: block;
+                width: 70%;
+                height: 3px;
+                background: linear-gradient(to right, transparent, rgb(192, 139, 6), transparent);
+                margin: 30px auto;
+            }
+            
+            .arabic-text .line, .coptic-text .line {
+                font-size: 26px;
+                padding: 20px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .nav-links {
+                gap: 15px;
+            }
+            
+            nav a {
+                font-size: 16px;
+                padding: 8px 18px;
+            }
+            
+            .hymn-title {
+                font-size: 28px;
+                padding: 18px 25px;
+                width: 95%;
+            }
+            
+            .hymn-title::after {
+                left: 20px;
+                font-size: 24px;
+            }
+            
+            .hymn-content, .hymn-response {
+                font-size: 26px;
+            }
+            
+            .hymn-card {
+                width: 98%;
+            }
+            
+            .hymn-card.active {
+                padding: 30px;
+            }
+            
+            .arabic-text .line, .coptic-text .line {
+                padding: 18px;
+                font-size: 24px;
+            }
+            
+            .column-title {
+                font-size: 24px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            nav {
+                flex-direction: column;
+                height: auto;
+                padding: 20px;
+                gap: 20px;
+            }
+            
+            .nav-brand {
+                justify-content: center;
+                width: 100%;
+            }
+            
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .main-content {
+                padding-top: 160px;
+                padding-left: 15px;
+                padding-right: 15px;
+            }
+            
+            .hymn-title {
+                font-size: 24px;
+                padding: 15px 20px;
+                width: 98%;
+                margin: 30px auto 0;
+            }
+            
+            .hymn-title::after {
+                left: 15px;
+                font-size: 20px;
+            }
+            
+            .hymn-content, .hymn-response {
+                font-size: 22px;
+            }
+            
+            .hymn-card {
+                width: 100%;
+            }
+            
+            .hymn-card.active {
+                padding: 25px 15px;
+                margin-top: 15px;
+                margin-bottom: 30px;
+            }
+            
+            .arabic-text .line, .coptic-text .line {
+                padding: 15px;
+                font-size: 20px;
+            }
+            
+            .column-title {
+                font-size: 22px;
+            }
+        }
+        
+        /* تحديثات لشريط التنقل للجوال */
+        @media (max-width: 768px) {
+            nav {
+                flex-direction: row;
+                height: 80px;
+                padding: 10px 20px;
+                gap: 10px;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                backdrop-filter: blur(20px);
+                -webkit-backdrop-filter: blur(20px);
+                align-items: center;
+            }
+            
+            nav.scrolled {
+                height: 70px;
+                padding: 8px 20px;
+            }
+            
+            .nav-brand {
+                width: auto;
+                justify-content: flex-start;
+                padding: 0;
+                order: 1;
+                flex: 1;
+            }
+            
+            nav img {
+                height: 50px;
+                order: 1;
+                margin-left: 0;
+            }
+            
+            .nav-brand span {
+                font-size: 22px;
+                order: 2;
+                text-align: right;
+                flex: 1;
+                padding-right: 10px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            
+            .menu-toggle {
+                display: block;
+                width: 45px;
+                height: 45px;
+                background: rgba(192, 139, 6, 0.2);
+                border: 2px solid rgb(192, 139, 6);
+                border-radius: 10px;
+                position: relative;
+                cursor: pointer;
+                order: 3;
+                transition: all 0.3s ease;
+                flex-shrink: 0;
+                margin-right: 5px;
+            }
+            
+            /* إخفاء الروابط العادية */
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 80px;
+                right: 0;
+                width: 100%;
+                background: rgba(10, 10, 10, 0.98);
+                backdrop-filter: blur(20px);
+                -webkit-backdrop-filter: blur(20px);
+                padding: 20px;
+                border-radius: 0 0 15px 15px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+                border-top: 2px solid rgba(192, 139, 6, 0.3);
+                z-index: 999;
+            }
+            
+            .nav-links.active {
+                display: flex;
+                flex-direction: column;
+                animation: slideDown 0.3s ease;
+            }
+            
+            @keyframes slideDown {
+                from {
+                    opacity: 0;
+                    transform: translateY(-20px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+            
+            .nav-links a {
+                width: 100%;
+                text-align: center;
+                padding: 15px;
+                font-size: 18px;
+                border-radius: 25px;
+                margin: 5px 0;
+                background: rgba(192, 139, 6, 0.1);
+                transition: all 0.3s ease;
+            }
+            
+            .nav-links a:hover {
+                background: rgba(192, 139, 6, 0.3);
+                transform: translateY(-3px);
+            }
+            
+            .main-content {
+                padding-top: 100px;
+            }
+            
+            /* تحسينات إضافية للجوال */
+            .hymn-title {
+                font-size: 24px !important;
+                padding: 15px 20px !important;
+                margin: 30px auto 0 !important;
+                width: 95% !important;
+            }
+            
+            .hymn-card {
+                width: 98% !important;
+                margin: 10px auto !important;
+                border-radius: 20px !important;
+            }
+            
+            .hymn-card.active {
+                padding: 20px 15px !important;
+                margin-top: 15px !important;
+                margin-bottom: 30px !important;
+            }
+            
+            .hymn-content, .hymn-response {
+                font-size: 22px !important;
+                padding: 10px !important;
+            }
+            
+            .line {
+                font-size: 20px !important;
+                padding: 15px 10px !important;
+                margin-bottom: 15px !important;
+            }
+            
+            .music-note {
+                font-size: 20px !important;
+                padding-left: 30px !important;
+            }
+            
+            .hymn-bilingual {
+                gap: 20px !important;
+            }
+            
+            .arabic-text .line, 
+            .coptic-text .line {
+                font-size: 18px !important;
+                padding: 15px 10px !important;
+            }
+            
+            .column-title {
+                font-size: 20px !important;
+                margin-bottom: 15px !important;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            nav {
+                padding: 8px 15px;
+                height: 70px;
+            }
+            
+            nav.scrolled {
+                height: 65px;
+            }
+            
+            nav img {
+                height: 40px;
+            }
+            
+            .nav-brand span {
+                font-size: 18px;
+                padding-right: 8px;
+            }
+            
+            .menu-toggle {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .menu-toggle span {
+                height: 2.5px;
+            }
+            
+            .nav-links {
+                top: 70px;
+            }
+            
+            .main-content {
+                padding-top: 90px;
+            }
+            
+            .hymn-title {
+                font-size: 20px !important;
+                padding: 12px 15px !important;
+            }
+            
+            .hymn-title::after {
+                left: 10px !important;
+                font-size: 16px !important;
+            }
+            
+            .hymn-content, .hymn-response {
+                font-size: 18px !important;
+            }
+            
+            .line {
+                font-size: 17px !important;
+                padding: 12px 8px !important;
+                margin-bottom: 12px !important;
+            }
+            
+            .arabic-text .line, 
+            .coptic-text .line {
+                font-size: 16px !important;
+                padding: 12px 8px !important;
+            }
+            
+            .hymn-card.active {
+                padding: 15px 10px !important;
+            }
+        }
+        
+        @media (max-width: 360px) {
+            .nav-brand span {
+                font-size: 16px;
+            }
+            
+            nav img {
+                height: 35px;
+            }
+            
+            .menu-toggle {
+                width: 35px;
+                height: 35px;
+            }
+            
+            .hymn-title {
+                font-size: 18px !important;
+                padding: 10px 12px !important;
+            }
+            
+            .hymn-content, .hymn-response {
+                font-size: 16px !important;
+            }
+            
+            .line {
+                font-size: 15px !important;
+                padding: 10px 6px !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav id="navbar">
+        <div class="nav-brand">
+            <img src="pic/WhatsApp Image 2025-11-14 at 22.07.54_3df7c7ed.jpg" alt="شعار مدرسة الشمامسة">
+            <span>مدرسة الشمامسة</span>
+        </div>
+       <div class="nav-links">
+            <a href="home2.html">الرئيسية</a>
+            <a href="الحان2.html">الحان</a>
+            <a href="طقس2.html">طقس</a>
+            <a href="قبطى2.html">قبطى</a>
+        </div>
+        <div class="menu-toggle" id="menuToggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
+    
+    <div class="main-content">
+      <div class="main-content">
+         <h1 class="hymn-title fade-in" data-target="hymn1">الليلويا فاي بي بي </h1>
+        <div class="hymn-card" id="hymn1">
+            <div class="hymn-bilingual">
+                <div class="arabic-text">
+                    <h3 class="column-title">النص العربي</h3>
+                    <span class="line">هلليلويا هذا هو اليوم الذي صنعه الرب فلنفرح و نبتهج فيه يا رب خلصنا يا رب سهل سبلنا مبارك الآتي باسم الرب هلليلويا</span>
+                </div>
+                <div class="coptic-text">
+                    <h3 class="column-title">النص القبطي المعرب</h3>
+                    <span class="line">الليلويا فاي بى بي ايهوؤو ايطا ابتشويس ثاميوف. مارين ثيليل انتين اونوف اممون انخيتف. او ابتشويس ايك اى ناهمين او ابتشويس ايك اى سوتين نين مويت. اف اسمارؤؤت انجى في اثنيو خين افران ام ابتشويس الليلويا</span>
+                  
+                </div>
+            </div>
+        </div>
+         <h1 class="hymn-title fade-in" data-target="hymn2">الليلويا جي افميفئي </h1>
+        <div class="hymn-card" id="hymn2">
+            <div class="hymn-bilingual">
+                <div class="arabic-text">
+                    <h3 class="column-title">النص العربي</h3>
+                    <span class="line">هلليلويا ان فكر الأنسان يعترف لك يا رب ، وبقية الفكر تُعَيّد لك. الذبائح والتقدمات اقبلها اليك. هلليلويا</span>
+                    
+                </div>
+                <div class="coptic-text">
+                    <h3 class="column-title">النص القبطي المعرب</h3>
+                    <span class="line">الليلويا جى افميفئي ان اورومي إيف اى اوؤنه ناك ايفول ابتشويس: اووه إبسوجب انتى او ميفئي إيف اى ارشايناك: ني ثيسيا ني ابروس فورا شوبو ايروك: الليلويا</span>
+                    
+                </div>
+            </div>
+        </div>
+        <h1 class="hymn-title fade-in" data-target="hymn3">   مرد 
+الانجيل السنوي
+   </h1>
+        <div class="hymn-card" id="hymn3">
+            <div class="hymn-bilingual">
+                <div class="arabic-text">
+                    <h3 class="column-title">النص العربي</h3>
+                    <span class="line">طوباهم بالحقيقة،قديسو هذا اليوم،
+كل واحد بإسمه،احباء المسيح.
+   إشفعى فينا، يا سيدتنا كلنا،
+السيدة والدة الإله، مريم ام مخلصنا،
+ليغفر لنا خطايانا.
+لأنه مبارك الآب والإبن،
+والروح القدس، الثالوث الكامل،
+نسجد له ونمجده. 
+</span>
+                </div>
+                <div class="coptic-text">
+                    <h3 class="column-title">النص القبطي المعرب</h3>
+                    <span class="line">أوأونيّاطو خين أو ميثمي: ني إثؤواب إنتي باي إيهؤو:
+بي أواي بي أواي كاطا بيفران: ني مين راتي إنتيه بي إخرستوس.
+   آري برسڤيڤين إيه إهرى إيجون:
+أوتين تشويس إن نيب تيرين تي ثيؤطوكوس:
+ماريَّا إثماڤ إمبين سوتير: 
+إنتيف كانين نوڤي نان إيڤول.
+  چيه إف إسماروؤت إنچيه إفيوت نيم إبشيري: 
+نيم بي إبنيڤما إثؤواب: تي إترياس إتچيك إيڤول: 
+تين أوأوشت إمموس تين تي أوأوناس.
+</span>
+                </div>
+            </div>
+        </div>
+         <h1 class="hymn-title fade-in" data-target="hymn4">   لحن
+تين جوشت إيڤول 
+   </h1>
+        <div class="hymn-card" id="hymn4">
+            <div class="hymn-bilingual">
+                <div class="arabic-text">
+                    <h3 class="column-title">النص العربي</h3>
+                    <span class="line">و ننتظرُ قيامة الأموات، وحياة الدهر الآتى. 
+آمين.
+</span>
+                </div>
+                <div class="coptic-text">
+                    <h3 class="column-title">النص القبطي المعرب</h3>
+                    <span class="line">تين جوشت إيڤول خا إت هينتي آناسطاسيس إنتيه نى ريفموؤوت: نيم بي أونخ إنتيه بى إيه أون إثنيو.
+ آمين.
+</span>
+                </div>
+            </div>
+        </div>
+         <h1 class="hymn-title fade-in" data-target="hymn5">     لحن
+ختام الصلوات
+ </h1>
+        <div class="hymn-card" id="hymn5">
+            <div class="hymn-bilingual">
+                <div class="arabic-text">
+                    <h3 class="column-title">النص العربي</h3>
+                    <span class="line">آمين هلليلويا: المجد للآب والابن والروح القدس
+ الآن وكل أوان و الى دهر الدهور آمين
+ نصرخ قائلين : ربنا يسوع المسيح
+ الذي صام عنا أربعين يوما و أربعين ليلة لكى يخلصنا من خطايانا
+ خلصنا وإرحمنا، يارب أرحم يارب ارحم يارب بارك آمين باركوا على باركوا على، ها المطانية، إغفروا لي، قل البركة
+</span>
+               </div>
+                <div class="coptic-text">
+                    <h3 class="column-title">النص القبطي المعرب</h3>
+                    <span class="line">آمين الليلويا ذوكسابترى كيه إيو كيه أجيو إبنفماتى: كيه نيه كيه آ إى كيه إسطوس إيه أوناس طون إيه أونون أمين.
+تين أوأوش ايڤول ان جو امموس جى او بين شويس ايسوس بى اخرستوس .
+  <br>
+من 12 بؤونه إلى 9 بابه:
+<br>
+اسمو ني مؤو ام افيارو
+<br>
+من 10 بابه إلى 10 طوبه:
+<br>
+اسمو نيستي نيم ني سيم
+<br>
+من 11 طوبه الى 11 بؤونه:
+<br>
+اسمو نيا اير انتى افنوتى
+<br>
+ماري بيك ناي نيم تيك هيريني أوى إن سوبت إم بيك لاؤس. 
+سوتى إممون أووه ناى نان 
+
+كيريليسون كيريليسون كيريه إفلوجيسون آمين إسمو إيروى إسمو إيروى. إيس تى ميطانيا كونى ايڤول جو امبى إسمو.
+
+</span>
+                </div>
+            </div>
+        </div>
+         <h1 class="hymn-title fade-in" data-target="hymn6">   مرد
+المزمور السنوي
+   </h1>
+        <div class="hymn-card" id="hymn6">
+            <div class="hymn-bilingual">
+                <div class="arabic-text">
+                    <h3 class="column-title">النص العربي</h3>
+                    <span class="line">هلليلويا</span>
+                </div>
+                <div class="coptic-text">
+                    <h3 class="column-title">النص القبطي المعرب</h3>
+                    <span class="line">الليلويا</span>
+                </div>
+            </div>
+        </div>
+         <h1 class="hymn-title fade-in" data-target="hymn7">    لحن
+ارباع الناقوس
+  </h1>
+        <div class="hymn-card" id="hymn7">
+            <div class="hymn-bilingual">
+                <div class="arabic-text">
+                    <h3 class="column-title">النص العربي</h3>
+                    <span class="line">يارب ارحم
+                        <br>
+                        مقدمة أرباع الناقوس في الأيام الواطُس<br>
+                        نسجد للآب والإبن والروح القدس الثالوث القدوس المساوى فى الجوهر. السلام للكنيسة بيت الملائكة السلام للعذراء التى ولدت مخلصنا.
+                        <br>
+                        مقدمة أرباع الناقوس في الأيام الآدام
+                        <br>
+                        تعالوا فلنسجد للثالوث
+القدوس الذي هو الآب
+والابن والروح القدس
+
+نحن الشعوب المسيحيين
+لأن هذا هو إلهنا الحقيقي.لنا
+رجاء في القديسة مريم
+الله يرحمنا
+بشفاعتها
+كل هدوء في العالم من قبل صلاة القديسة مريم العذراء.
+<br>
+ثم يُكمَّل بهذه الأرباع في كل الأيام
+<br>
+السلام لك يا مريم الحمامة
+الحسنة التي ولدت لنا الله
+الكلمة. السلام لك يا مريم سلام
+مقدس. السلام لك يا مريم أم
+القدوس.
+
+السلام لميخائيل رئيس الملائكة
+العظيم. السلام لغبريال المبشر
+المختار.
+
+السلام للشاروبيم السلام
+للسيرافيم. السلام لجميع
+الطغمات السمائية. السلام ليوحنا السابق العظيم
+السلام للكاهن نسيب عمانوئيل
+السلام لسادتي الآباء
+الرسل، السلام
+لتلاميذ ربنا يسوع
+المسيح. السلام لك أيها الشهيد، السلام للإنجيلي، السلام للرسول أنبا
+مرقس ناظر الإله. السلام لإسطفانوس أول الشهداء السلام لرئيس الشمامسة
+المبارك. السلام لك أيها الشهيد
+السلام للشجاع البطل
+السلام للابس الجهاد
+سيدي الملك
+جاورجيوس. بشفاعات والدة الإله
+القديسة مريم. يا رب
+أنعم لنا بمغفرة
+خطايانا.
+
+لكي نسبحك مع أبيك الصالح
+والروح القدس. لأنك أتيت
+وخلصتنا.
+                    </span>
+                </div>
+                <div class="coptic-text">
+                    <h3 class="column-title">النص القبطي المعرب</h3>
+                    <span class="line">كيري إليسون <br>
+                         مقدمة أرباع الناقوس في الأيام الواطُس<br>
+                         تين أوؤشت إم إفيوت نيم إبشيرى نيم بى إبنفما إثؤواب. تى إترياس إثؤواب إن أموؤسيوس.
+
+شيرى تى إكليسيا إبئى إنتيه نى أنجيليوس. شيرى تى بارثينوس إياطسميس بين
+سوتير. <br>
+ مقدمة أرباع الناقوس في الأيام الآدام
+                        <br>
+                        أمويني مارين أوؤشت إنتى إترياس إثؤواب: إيتى إفيوت نيم إبشيرى نيم بى إبنيفما إثؤواب.
+
+أنون خانى لاؤس إن إخرستيانوس فاى
+غار بيه نوتى إن أليثينوس
+
+أوؤن أو هيلبيس إنتان خين ثى أثؤواب
+ ماريا. إيريه إفنوتى ناى نان هيتين نيس إبريسفيا  أو أون او ميت هينوس: انيهري خين بي كوسموس: افول هيتين بي اتشليل انتي ني اجيا ماريا تي بارثنوس.
+ <br>
+ ثم يُكمَّل بهذه الأرباع في كل الأيام
+<br>
+شيرى نيه ماريا تى إتشرومبى
+إثنيوس ثي إيطاس ميسى نان إم
+إفنوتى بى لوغوس
+
+شيرى نيه ماريا: خين أو شيرى
+إثؤواب. شيرى نيه ماريا: اثماف
+إمفى إثؤواب.
+
+شيرى ميخائيل بى نيشتى إن أرشى إنجليوس. شيرى جبريئيل بى سوتب
+إم فاى شيننوفى.
+
+شيرى نى شيرفيم: شيرى نى
+سيرافيم شيرى نى طاغما تيرو إن إيبورانيون.
+
+
+شيرى يوانس :بينيشتى ام ابروذروموس 
+شيري بي أوويب : إب سينجينيس إن
+إممانوئيل
+شيريى ناشويس إنيوتى. إن
+أبوسطولوس. شيرى نى ماثيتيس
+إنتى بين شويس إيسوس بى
+إخرستوس 
+شيرى ناك أو بى مارتيروس. شيرى بى إفانجيليستيس. شيرى بى أبوسطولوس. أفا ماركوس بى ثيؤريموس 
+شيرى إسطفانوس ى شورب
+إممارتيروس. شيرى بى أرشى ذياكون
+أويوه إت إز مارؤوت 
+شيرى ناك أو بى مارتيروس
+شيري بي شويج
+إنجين نيؤس. شيرى بى أيثلوفوروس باشويس إبؤرو
+جيؤرجيوس
+هيتين نى إبريسفيا إنتى تى
+ثيؤطوكوس إثؤواب ماريا إبشويس
+أرى إهموت نان إمبى كو إيفول إنتى
+نين نوفى
+
+إثريك هوس إيروك. نيم بيك يوت إن آغاثوس. نيم بى إبنفما إثؤواب.
+جيه آك إى آكسوتى إممون ناى نان. 
+                    </span>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+    </div>
+    
+    <footer>
+        <div class="footer-text">© 2026 مدرسة الشمامسة - جميع الحقوق محفوظة</div>
+    </footer>
+    
+    <script>
+        // دالة لفتح/إغلاق محتوى اللحن عند النقر على العنوان
+        document.addEventListener('DOMContentLoaded', function() {
+            const hymnTitles = document.querySelectorAll('.hymn-title');
+            
+            hymnTitles.forEach(title => {
+                title.addEventListener('click', function() {
+                    // الحصول على الهدف المرتبط بهذا العنوان
+                    const targetId = this.getAttribute('data-target');
+                    const targetCard = document.getElementById(targetId);
+                    
+                    // تأثير السلايد للأعلى/لأسفل
+                    if (this.classList.contains('active')) {
+                        // إغلاق البطاقة
+                        this.classList.remove('active');
+                        targetCard.classList.remove('active');
+                    } else {
+                        // فتح البطاقة
+                        this.classList.add('active');
+                        targetCard.classList.add('active');
+                        
+                        // إغلاق البطاقات الأخرى إذا كانت مفتوحة
+                        hymnTitles.forEach(otherTitle => {
+                            if (otherTitle !== this && otherTitle.classList.contains('active')) {
+                                const otherTargetId = otherTitle.getAttribute('data-target');
+                                const otherTargetCard = document.getElementById(otherTargetId);
+                                
+                                otherTitle.classList.remove('active');
+                                otherTargetCard.classList.remove('active');
+                            }
+                        });
+                    }
+                });
+            });
+            
+            // فتح أول لحن تلقائياً عند تحميل الصفحة
+            if (hymnTitles.length > 0) {
+                setTimeout(() => {
+                    const firstTitle = hymnTitles[0];
+                    const firstTargetId = firstTitle.getAttribute('data-target');
+                    const firstTargetCard = document.getElementById(firstTargetId);
+                    
+                    firstTitle.classList.add('active');
+                    firstTargetCard.classList.add('active');
+                }, 500);
+            }
+            
+            // تأثيرات الظهور عند التمرير
+            window.addEventListener('scroll', function() {
+                // تأثير شريط التنقل
+                const navbar = document.getElementById('navbar');
+                if (window.scrollY > 50) {
+                    navbar.classList.add('scrolled');
+                } else {
+                    navbar.classList.remove('scrolled');
+                }
+                
+                // تأثير ظهور العناصر
+                const fadeElements = document.querySelectorAll('.fade-in');
+                fadeElements.forEach(element => {
+                    const elementTop = element.getBoundingClientRect().top;
+                    const elementVisible = 150;
+                    
+                    if (elementTop < window.innerHeight - elementVisible) {
+                        element.classList.add('visible');
+                    }
+                });
+            });
+            
+            // بدء تأثيرات الظهور عند التحميل
+            const fadeElements = document.querySelectorAll('.fade-in');
+            fadeElements.forEach((element, index) => {
+                setTimeout(() => {
+                    if (element.getBoundingClientRect().top < window.innerHeight - 100) {
+                        element.classList.add('visible');
+                    }
+                }, 100 * index);
+            });
+            
+            // تأثيرات تفاعلية للأسطر
+            const lines = document.querySelectorAll('.line');
+            lines.forEach(line => {
+                line.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-8px) scale(1.03)';
+                });
+                
+                line.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0) scale(1)';
+                });
+            });
+            
+            // القائمة المتنقلة للجوال
+            const menuToggle = document.getElementById('menuToggle');
+            const navLinksMobile = document.querySelector('.nav-links');
+            
+            if (menuToggle) {
+                menuToggle.addEventListener('click', function() {
+                    this.classList.toggle('active');
+                    navLinksMobile.classList.toggle('active');
+                });
+                
+                // إغلاق القائمة عند النقر على رابط
+                const links = document.querySelectorAll('.nav-links a');
+                links.forEach(link => {
+                    link.addEventListener('click', () => {
+                        menuToggle.classList.remove('active');
+                        navLinksMobile.classList.remove('active');
+                    });
+                });
+                
+                // إغلاق القائمة عند التمرير
+                window.addEventListener('scroll', () => {
+                    if (menuToggle.classList.contains('active')) {
+                        menuToggle.classList.remove('active');
+                        navLinksMobile.classList.remove('active');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
